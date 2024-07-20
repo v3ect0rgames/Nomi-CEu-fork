@@ -3,6 +3,8 @@ import com.nomiceu.nomilabs.util.LabsModeHelper
 import static com.nomiceu.nomilabs.groovy.GroovyHelpers.RecyclingHelpers.*
 import static gregtech.api.GTValues.*
 
+
+
 // Furnaces
 // Iron Furnace
 mods.gregtech.assembler.recipeBuilder()
@@ -104,3 +106,11 @@ if (LabsModeHelper.expert) {
 		.buildAndRegister()
 
 }
+// Coated Circuit Board
+mods.gregtech.assembler.recipeBuilder()
+	.inputs(ore('plateWood'))
+	.fluidInputs(fluid('glue') * 150)
+	.circuitMeta(3)
+	.outputs(metaitem('board.coated'))
+	.duration(100).EUt(VA[ULV])
+	.buildAndRegister()
