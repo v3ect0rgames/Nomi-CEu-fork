@@ -49,23 +49,27 @@ for (def color : EnumDyeColor.values()) {
 // Fix Elevator Redyeing
 for (def entry in dyeHelperMap.entrySet()) {
 	crafting.remove('elevatorid:redye_' + entry.key)
-	crafting.addShapeless(item('elevatorid:elevator_' + entry.key), [ore('blockElevator'), entry.value])
+	if(entry.key != "lightBlue") {
+		crafting.addShapeless(item('elevatorid:elevator_' + entry.key), [ore('blockElevator'), entry.value])
+	}
+	else {
+		crafting.addShapeless(item('elevatorid:elevator_' + "light_blue"), [ore('blockElevator'), entry.value])
+	}
+		
 }
 
 // Fix Slime Block Redyeing
 for (def color : EnumDyeColor.values()) {
 	def name = color.getName()
-	def meta = color.getMetadata()
+	def meta = color.ordinal()   
 	def oreIng = dyeHelperMap.get(name)
-	crafting.remove('darkutils:dyed_slime_block_' + name)
+	crafting.remove('darkutils:dyed_slimeblock' + name)
 	crafting.shapedBuilder()
-		.output(item('darkutils:slime_dyed', meta) * 8)
-		.matrix('SSS',
-			'SDS',
-			'SSS')
-		.key('S', ore('blockSlime'))
-		.key('D', oreIng)
-		.register()
+			.output(item('darkutils:slime_dyed', meta) * 8)
+			.matrix('SSS', 'SDS', 'SSS')
+			.key('S', ore('blockSlime'))
+			.key('D', ore('dye'))
+			.register()
 }
 
 // Fix Satchel Redeying
