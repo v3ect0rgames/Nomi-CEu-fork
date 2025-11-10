@@ -1,16 +1,37 @@
-package classes.post
+package post.classes
 
+import com.google.common.base.Ascii
 import gregtech.api.GTValues
 import net.minecraft.item.ItemStack
 import org.apache.commons.lang3.tuple.Pair
 
+/**
+ * Class containing various util functions used across scripts.
+ */
 class Common {
 
     /* Cached Values */
-    private static ItemStack meP2p = null
-    private static List<Pair<String, ItemStack>> p2pVariants = null
-    private static List<ItemStack> eioGlasses = null
-    private static List<Pair<Integer, String>> voltageNames = null
+    private static List<Pair<String, ItemStack>> p2pVariantsCache = null
+    private static List<ItemStack> eioGlassesCache = null
+    private static List<Pair<Integer, String>> voltageNamesCache = null
+
+    /**
+     * Takes an array of strings, and concatenates them by camel case.
+     */
+    static String combineCamelCase(String... strings) {
+        StringBuilder builder = new StringBuilder()
+
+        if (strings.length <= 0) return ''
+        if (strings.length == 1) return strings[0]
+
+        builder.append(strings[0])
+        for (int i = 1; i < strings.length; i++) {
+            builder.append(Ascii.toUpperCase(strings[i].charAt(0)))
+            builder.append(strings[i].substring(1))
+        }
+
+        return builder.toString()
+    }
 
     /**
      * Gets a continuous sublist of GregTech tier to voltage names, in lowercase.<br>
@@ -19,27 +40,21 @@ class Common {
      * @param to The end index of the sublist. Inclusive.
      */
     static List<Pair<Integer, String>> getVoltageNames(int from, int to) {
-        if (voltageNames == null) {
-            voltageNames = []
+        if (voltageNamesCache == null) {
+            voltageNamesCache = []
             for (int i = 0; i < GTValues.VN.length; i++) {
-                voltageNames.add(Pair.of(i, GTValues.VN[i].toLowerCase()))
+                voltageNamesCache.add(Pair.of(i, GTValues.VN[i].toLowerCase(Locale.ENGLISH)))
             }
         }
 
-        return voltageNames.subList(from, to + 1)
+        return voltageNamesCache.subList(from, to + 1)
     }
 
-    static ItemStack getMeP2p() {
-        if (meP2p != null) return meP2p
-
-        meP2p = item('appliedenergistics2:part', 460)
-        return meP2p
-    }
     // All P2P Variants, Excluding ME P2P
     static List<Pair<String, ItemStack>> getP2pVariants() {
-        if (p2pVariants != null) return p2pVariants
+        if (p2pVariantsCache != null) return p2pVariantsCache
 
-        p2pVariants = [
+        p2pVariantsCache = [
             Pair.of('Redstone', item('appliedenergistics2:part', 461)),
             Pair.of('Item', item('appliedenergistics2:part', 462)),
             Pair.of('Fluid', item('appliedenergistics2:part', 463)),
@@ -48,13 +63,13 @@ class Common {
             Pair.of('EU', item('appliedenergistics2:part', 470)),
             Pair.of('Interface', item('nae2:part', 1)),
         ]
-        return p2pVariants
+        return p2pVariantsCache
     }
 
     static List<ItemStack> getEioGlasses() {
-        if (eioGlasses != null) return eioGlasses
+        if (eioGlassesCache != null) return eioGlassesCache
 
-        eioGlasses = []
+        eioGlassesCache = []
 
         var prefixes = ['holy', 'unholy', 'pasture', 'not_holy', 'not_unholy', 'not_pasture']
             .collect { prefix -> "block_${prefix}".toString() }
@@ -65,11 +80,11 @@ class Common {
 
         for (var prefix : prefixes) {
             for (var suffix : suffixes) {
-                eioGlasses.add(item("enderio:${prefix}_${suffix}"))
+                eioGlassesCache.add(item("enderio:${prefix}_${suffix}"))
             }
         }
 
-        return eioGlasses
+        return eioGlassesCache
     }
 
 }
