@@ -7,7 +7,8 @@ import static com.nomiceu.nomilabs.groovy.GroovyHelpers.TooltipHelpers.addToolti
 import static com.nomiceu.nomilabs.groovy.GroovyHelpers.TranslationHelpers.*
 import static gregtech.api.GTValues.*
 
-import classes.post.Common
+import post.classes.Common
+
 import com.nomiceu.nomilabs.util.LabsModeHelper
 import gregtech.api.items.metaitem.MetaItem
 import gregtech.api.recipes.Recipe
@@ -192,8 +193,10 @@ for (MetaItem.MetaValueItem meta : item('zbgt:zbgt_meta_item').item.allItems) {
 
     List<Recipe> recipes = mods.gregtech.assembler.findByOutput([meta.stackForm], null)
 
-    if (recipes == null)
-        println "ZBGT Addon Script: Could not find recipes for wrap ${meta.unlocalizedName}!"
+    if (recipes == null) {
+        log.error "ZBGT Addon Script: Could not find recipes for wrap ${meta.unlocalizedName}!"
+        continue
+    }
 
     for (Recipe recipe : recipes) {
         mods.gregtech.assembler.recipeBuilder()
